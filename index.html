@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Todo List</title>
+    <style>
+        :root {
+            --primary-bg: #fefefe;
+            --primary-text: #333;
+            --accent: #ff6f61;
+            --pastel-green: #c1e1c1;
+            --pastel-blue: #aec6cf;
+            --pastel-yellow: #fff9c4;
+            --pastel-coral: #ffd6c1;
+            --note-shadow: rgba(0, 0, 0, 0.1);
+        }
+        body, main {
+            overflow-x: hidden; /* Hide horizontal scroll */
+        }
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            background-color: var(--accent);
+            color: #fff;
+        }
+
+        main {
+            width: 90%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem auto;
+            box-sizing: border-box; /* Ensure elements stay within the container width */
+        }
+
+        .note {
+            background-color: var(--pastel-coral);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--note-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .note:hover {
+                transform: translateY(-5px);
+            }
+
+        .note-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-body {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--pastel-yellow);
+            color: var(--primary-text);
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+
+            .btn:hover {
+                background-color: var(--pastel-blue);
+            }
+
+        .form-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: var(--pastel-green);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--note-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-sizing: border-box; /* Prevent overflow from padding */
+        }
+
+            .form-container input,
+            .form-container textarea {
+                width: 100%;
+                padding: 0.8rem;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 1rem;
+                background-color: #fff;
+                transition: border-color 0.2s, box-shadow 0.2s;
+                box-sizing: border-box; /* Ensures padding is included in the element's width */
+            }
+
+                .form-container input:focus,
+                .form-container textarea:focus {
+                    outline: none;
+                    border-color: var(--accent);
+                    box-shadow: 0 0 4px var(--accent);
+                }
+
+            .form-container textarea {
+                resize: none;
+            }
+
+            .form-container button {
+                padding: 0.8rem;
+                background-color: var(--accent);
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+                .form-container button:hover {
+                    background-color: var(--pastel-coral);
+                }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sticky Note Todo List</h1>
+    </header>
+
+    <div class="form-container">
+        <input type="text" id="note-title" placeholder="Title" required>
+        <textarea id="note-body" placeholder="Description" rows="4" required></textarea>
+        <input type="date" id="note-due-date" required>
+        <button id="add-note-btn">Add Note</button>
+    </div>
+
+    <main id="notes-container">
+        <!-- Sticky notes will appear here -->
+    </main>
+
+    <script>
+        const notesContainer = document.getElementById('notes-container');
+        const addNoteBtn = document.getElementById('add-note-btn');
+
+        const createNoteElement = (title, body, dueDate) => {
+            const note = document.createElement('div');
+            note.classList.add('note');
+
+            note.innerHTML = `
+                    <div class="note-header">${title}</div>
+                    <div class="note-body">${body}</div>
+                    <div class="note-footer">
+                        <span>Due: ${dueDate}</span>
+                        <button class="btn delete-btn">Delete</button>
+                    </div>
+                `;
+
+            const deleteBtn = note.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => note.remove());
+
+            return note;
+        };
+
+        const addNote = () => {
+            const title = document.getElementById('note-title').value;
+            const body = document.getElementById('note-body').value;
+            const dueDate = document.getElementById('note-due-date').value;
+
+            if (title && body && dueDate) {
+                const noteElement = createNoteElement(title, body, dueDate);
+                notesContainer.appendChild(noteElement);
+
+                // Clear the form fields
+                document.getElementById('note-title').value = '';
+                document.getElementById('note-body').value = '';
+                document.getElementById('note-due-date').value = '';
+            }
+        };
+
+        addNoteBtn.addEventListener('click', addNote);
+    </script>
+</body>
+</html>
